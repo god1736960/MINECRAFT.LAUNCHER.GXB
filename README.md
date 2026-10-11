@@ -1,4 +1,4 @@
-# MINECRAFT.LAUNCHER.GXB 🎮
+# MINECRAFT.LAUNCHER.JAVA.&.BEDROCK🎮
 Un lanzador personalizado de Minecraft con soporte para Java Edition, Bedrock Edition, Minecraft Dungeons y Minecraft Legends.
 
 ## ✨ Características
