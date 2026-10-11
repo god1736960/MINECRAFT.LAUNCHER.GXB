@@ -1,0 +1,45 @@
+LAUNCHER MINECRAFT  (Java Edition) - replica oficial
+=====================================================
+
+QUE ES
+------
+Launcher de Minecraft con el DISENO identico al launcher oficial
+(barra lateral + pestanas Play / Installations / Skins / Patch notes +
+barra PLAY abajo con: version a la IZQUIERDA, boton PLAY al CENTRO y la
+cuenta a la DERECHA). Incluye un MOTOR DE ARRANQUE real:
+
+  - Descarga versiones desde el manifiesto OFICIAL de Mojang
+    (client.jar + librerias + natives + assets), con barra de progreso.
+  - Muestra SOLO las versiones que tienes instaladas en el selector PLAY
+    y en la pestana Installations. El catalogo completo (releases y
+    snapshots) solo aparece en "New installation".
+  - Lanza el juego en modo OFFLINE / un jugador (usuario configurable,
+    por defecto Steve). Resuelve Java: ruta en Ajustes -> JAVA_HOME -> PATH.
+
+El icono del .exe es el BLOQUE DE CESPED (sin bordes blancos).
+Mas adelante se anadira Bedrock.
+
+COMO CREAR EL .EXE (en Windows)
+-------------------------------
+1. Instala Node.js LTS:  https://nodejs.org
+2. Doble clic en  crear-windows-exe.bat
+3. Al terminar, el instalador estara en la carpeta  dist\
+      LAUNCHER MINECRAFT Setup 1.0.0.exe
+
+PROBAR SIN EMPAQUETAR (opcional)
+--------------------------------
+   npm install
+   npm start
+
+REQUISITOS PARA JUGAR
+---------------------
+- Conexion a internet la primera vez (para descargar la version).
+- Java instalado (Java 8 para versiones antiguas, Java 17+ para 1.18+).
+  Puedes fijar la ruta de java.exe en Ajustes.
+
+NOTA TECNICA
+------------
+Este proyecto se preparo en un entorno Linux sin Wine, por lo que el .exe
+NO se pudo compilar ni el juego probar aqui: la generacion del .exe y el
+arranque real del juego se hacen en TU Windows con el .bat de arriba.
+Si algo falla al compilar o lanzar, envia el mensaje de error exacto.

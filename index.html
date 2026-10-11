@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8" />
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data:; style-src 'self' 'unsafe-inline'; script-src 'self'" />
+<title>LAUNCHER MINECRAFT</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <!-- Barra de título personalizada -->
+  <header class="titlebar">
+    <div class="tb-left">
+      <img class="tb-ico" src="../assets/grass_icon.png" alt="" />
+      <span class="tb-title">LAUNCHER MINECRAFT</span>
+    </div>
+    <div class="tb-ctrls">
+      <button id="min" class="tb-btn" title="Minimizar">&#8211;</button>
+      <button id="max" class="tb-btn" title="Maximizar">&#9633;</button>
+      <button id="close" class="tb-btn close" title="Cerrar">&times;</button>
+    </div>
+  </header>
+
+  <div class="app">
+    <!-- ===== BARRA LATERAL ===== -->
+    <aside class="sidebar">
+      <div class="profile">
+        <div class="profile-info">
+          <div class="profile-name">Steve <span class="caret">&#9662;</span></div>
+          <div class="profile-status"><span class="dot"></span> Connected</div>
+        </div>
+      </div>
+
+      <nav class="side-nav">
+        <button class="nav-item" data-tab="news">
+          <img class="nav-ic" src="../assets/news_white.png" alt="" /> <span>News</span>
+        </button>
+        <button class="nav-item active game" data-tab="play">
+          <img class="nav-ic sq" src="../assets/grass_icon.png" alt="" />
+          <span>MINECRAFT: <b>Java Edition</b></span>
+        </button>
+        <button class="nav-item game" data-tab="bedrock">
+          <img class="nav-ic sq" src="../assets/bedrock/icon_bedrock.png" alt="" />
+          <span>MINECRAFT: <b>Bedrock Edition</b></span>
+        </button>
+        <div class="side-sep"></div>
+        <button class="nav-item game" data-tab="dungeons">
+          <img class="nav-ic sq" src="../assets/game_dungeons.webp" alt="" />
+          <span>MINECRAFT: <b>Dungeons</b></span>
+        </button>
+        <button class="nav-item game" data-tab="legends">
+          <img class="nav-ic sq" src="../assets/game_legends.webp" alt="" />
+          <span>MINECRAFT: <b>Legends</b></span>
+        </button>
+      </nav>
+
+      <div class="side-bottom">
+        <button class="nav-item small" data-tab="settings">
+          <img class="nav-ic" src="../assets/settings.png" alt="" /> <span>Settings</span>
+        </button>
+      </div>
+    </aside>
+
+    <!-- ===== CONTENIDO ===== -->
+    <main class="content ed-java">
+      <!-- Cabecera Java Edition + pestañas -->
+      <div class="edition-head" id="head-java">
+        <h1 class="edition-title">MINECRAFT: <span>JAVA EDITION</span></h1>
+        <div class="tabs">
+          <button class="tab active" data-sub="play">Play</button>
+          <button class="tab" data-sub="installations">Installations</button>
+          <button class="tab" data-sub="skins">Skins</button>
+          <button class="tab" data-sub="patch">Patch notes</button>
+        </div>
+      </div>
+
+      <!-- ---- PLAY ---- -->
+      <section class="panel active" id="panel-play">
+        <div class="play-art">
+          <img src="../assets/bg_cave.jpg" alt="Minecraft" />
+          <div class="art-overlay"></div>
+        </div>
+      </section>
+
+      <!-- ---- INSTALLATIONS ---- -->
+      <section class="panel" id="panel-installations">
+        <div class="inst-toolbar">
+          <input id="inst-search" class="search" placeholder="SEARCH" />
+          <div class="sortby">SORT BY <b>Latest played</b> &#9662;</div>
+          <label class="chk"><input type="checkbox" id="flt-release" checked /> Releases</label>
+          <label class="chk"><input type="checkbox" id="flt-snap" /> Snapshots</label>
+          <button id="btn-new-inst" class="btn-new">New installation</button>
+        </div>
+        <div id="inst-list" class="inst-list"></div>
+      </section>
+
+      <!-- ---- SKINS (vestuario rediseñado estilo KLauncher) ---- -->
+      <section class="panel" id="panel-skins">
+        <div class="kl-skins">
+          <!-- Columna izquierda: visor 3D (rotable con el ratón) -->
+          <div class="kl-left">
+            <div class="kl-left-head">Your character</div>
+            <div class="kl-stage" id="skin-stage">
+              <!-- Visor 3D en WebGL real (motor nuevo, con Z-buffer): no se
+                   deforma en ningun angulo. Lo dibuja src/skin-render.js. -->
+              <canvas id="mc-canvas" class="mc-canvas"></canvas>
+            </div>
+            <!-- Iconos bajo el modelo: pies (modelo Normal/Slim) y engranaje (ajustes de mano) -->
+            <div class="kl-stage-icons">
+              <button class="kl-ic" id="kl-ic-feet" title="Modelo: Normal / Slim">👣</button>
+              <button class="kl-ic" id="kl-ic-gear" title="Ajustes de mano">⚙️</button>
+            </div>
+          </div>
+          <!-- Columna derecha: nombre, librerías, promo y carga -->
+          <div class="kl-right">
+            <div class="kl-username" id="kl-username">Steve</div>
+            <div class="kl-libtabs">
+              <button class="kl-libtab active" data-lib="skin">Skin Library</button>
+              <button class="kl-libtab" data-lib="cape">Cape Library</button>
+            </div>
+            <!-- Bloque promocional (skin) -->
+            <div class="kl-promo" id="kl-promo-skin">
+              <div class="kl-promo-txt">
+                <div class="kl-promo-t">Beautiful character? Come to us!</div>
+                <div class="kl-promo-s">A collection of over 100,000 skins!</div>
+                <div class="kl-promo-cta">Click and choose!</div>
+              </div>
+            </div>
+            <!-- Bloque promocional (cape) -->
+            <div class="kl-promo hidden" id="kl-promo-cape">
+              <div class="kl-promo-txt">
+                <div class="kl-promo-t">Don't have a cape yet?</div>
+                <div class="kl-promo-s">Then hurry up and visit the website!</div>
+                <div class="kl-promo-cta">Click and choose!</div>
+              </div>
+            </div>
+            <!-- Caja de carga (+) -->
+            <div class="kl-load" id="kl-load">
+              <div class="kl-load-plus">+</div>
+              <div class="kl-load-txt" id="kl-load-txt">Load skin</div>
+            </div>
+            <!-- Biblioteca (miniaturas reales) -->
+            <div class="kl-grid" id="kl-grid"></div>
+          </div>
+        </div>
+        <!-- Menú contextual: clic derecho sobre el modelo -->
+        <div class="kl-ctx hidden" id="kl-ctx">
+          <div class="kl-ctx-sec">Hand Settings</div>
+          <div class="kl-ctx-switch">
+            <span id="kl-model-label">Normal</span>
+            <label class="kl-sw"><input type="checkbox" id="kl-model-toggle" /><span class="kl-sw-track"></span></label>
+          </div>
+          <div class="kl-ctx-sec">Actions</div>
+          <button class="kl-ctx-act" id="kl-remove-skin">Remove skin</button>
+          <button class="kl-ctx-act" id="kl-remove-cape">Remove cape</button>
+        </div>
+      </section>
+
+      <!-- ---- PATCH NOTES ---- -->
+      <section class="panel" id="panel-patch">
+        <div class="patch-grid">
+          <article class="patch-card"><img src="../assets/patch1.webp" alt=""/><div class="pc-body"><h3>The Wild Update</h3><p>Novedades de biomas, Allay y el Deep Dark.</p></div></article>
+          <article class="patch-card"><img src="../assets/patch2.jpg" alt=""/><div class="pc-body"><h3>Nether Update</h3><p>Nuevos biomas y bloques del Nether.</p></div></article>
+          <article class="patch-card"><img src="../assets/patch3.jpg" alt=""/><div class="pc-body"><h3>Trails &amp; Tales</h3><p>Arqueología, camellos y mucho más.</p></div></article>
+        </div>
+      </section>
+
+      <!-- ---- NEWS ---- -->
+      <section class="panel" id="panel-news">
+        <div class="news-wrap">
+          <!-- Botón Play grande + flecha desplegable (elegir juego) -->
+          <div class="news-playrow">
+            <div class="news-play-group">
+              <button class="news-play" id="news-play">Play</button>
+              <button class="news-play-caret" id="news-play-caret" title="Elegir juego">&#9662;</button>
+              <div class="news-play-menu hidden" id="news-play-menu">
+                <button class="npm-item" data-go="play"><span>☕</span> Java Edition</button>
+                <button class="npm-item" data-go="bedrock"><span>🟩</span> Bedrock Edition</button>
+                <button class="npm-item" data-go="dungeons"><span>⚔️</span> Minecraft Dungeons</button>
+                <button class="npm-item" data-go="legends"><span>🏔️</span> Minecraft Legends</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjeta destacada grande (rota) + 4 mini tarjetas (rotan) -->
+          <div class="news-feature">
+            <article class="nf-hero" id="nf-hero">
+              <img id="nf-hero-img" src="../assets/bg_cave.jpg" alt="" />
+              <div class="nf-hero-grad"></div>
+              <div class="nf-hero-txt">
+                <span class="nf-tag" id="nf-hero-tag">Novedades</span>
+                <h2 id="nf-hero-title">Bienvenido a LAUNCHER MINECRAFT</h2>
+                <p id="nf-hero-sub">Lo último de Minecraft, siempre a mano.</p>
+              </div>
+            </article>
+            <div class="nf-minis" id="nf-minis"></div>
+          </div>
+
+          <!-- Búsqueda + Filtros -->
+          <div class="news-tools">
+            <div class="news-search">
+              <span class="ns-ic">🔍</span>
+              <input id="news-search" type="text" placeholder="What do you seek?" />
+            </div>
+            <div class="news-filter">
+              <button class="news-filter-btn" id="news-filter-btn">Filters <span>&#9662;</span></button>
+              <div class="news-filter-menu hidden" id="news-filter-menu">
+                <div class="nfm-label">Game</div>
+                <select id="nf-game">
+                  <option value="all">All games</option>
+                  <option value="java">Java Edition</option>
+                  <option value="bedrock">Bedrock Edition</option>
+                  <option value="dungeons">Dungeons</option>
+                  <option value="legends">Legends</option>
+                </select>
+                <div class="nfm-label">Category</div>
+                <select id="nf-cat">
+                  <option value="all">All categories</option>
+                  <option value="update">Updates</option>
+                  <option value="news">News</option>
+                  <option value="guide">Guides</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tarjetas de novedades (Java / Bedrock / Dungeons / Legends) -->
+          <div class="news-grid" id="news-grid"></div>
+        </div>
+      </section>
+
+      <!-- ---- SETTINGS ---- -->
+      <section class="panel" id="panel-settings">
+        <div class="settings-head"><img src="../assets/settings.png" alt=""/><h2>Settings</h2></div>
+        <div class="form">
+          <label>Nombre de usuario (offline)</label>
+          <input id="set-user" type="text" />
+          <label>Carpeta del juego (.minecraft)</label>
+          <div class="row"><input id="set-dir" type="text" /><button id="browse-dir" class="btn-sec">BROWSE</button></div>
+          <label>Ruta de Java (opcional)</label>
+          <div class="row"><input id="set-java" type="text" placeholder="Automático (PATH / JAVA_HOME)" /><button id="browse-java" class="btn-sec">BROWSE</button></div>
+          <label>Memoria RAM (MB)</label>
+          <input id="set-ram" type="number" min="512" step="256" />
+          <div class="row">
+            <div class="col"><label>Ancho</label><input id="set-w" type="number" placeholder="auto" /></div>
+            <div class="col"><label>Alto</label><input id="set-h" type="number" placeholder="auto" /></div>
+          </div>
+
+          <div class="set-sep"></div>
+          <label>Al iniciar Minecraft</label>
+          <div class="radio-list" id="on-launch">
+            <label class="radio-item"><input type="radio" name="onstart" value="keep" /> <span><b>Mantener el launcher abierto</b><small>El launcher sigue visible mientras juegas.</small></span></label>
+            <label class="radio-item"><input type="radio" name="onstart" value="hide" /> <span><b>Ocultar el launcher</b><small>Se oculta por completo (sale de la barra de tareas y deja de consumir recursos) y reaparece al cerrar Minecraft.</small></span></label>
+            <label class="radio-item"><input type="radio" name="onstart" value="close" /> <span><b>Cerrar el launcher al iniciar el juego</b><small>El launcher se cierra, pero Minecraft sigue abierto por su cuenta.</small></span></label>
+          </div>
+          <label class="chk chk-wide"><input type="checkbox" id="set-killgame" /> Al cerrar el launcher manualmente, cerrar también Minecraft</label>
+          <label class="chk chk-wide"><input type="checkbox" id="set-optimize" /> Super-optimizar la JVM (G1GC / banderas Aikar) para más FPS y menos tirones</label>
+
+          <div class="set-sep"></div>
+          <div class="set-note">👕 Las skins y capas se gestionan de forma automática desde la pestaña <b>Skins</b>. El launcher sirve tu skin localmente (modo offline, un jugador), sin servidores externos ni configuración manual.</div>
+
+          <button id="save-settings" class="btn-save">Guardar</button>
+          <span id="save-ok" class="save-ok"></span>
+        </div>
+      </section>
+
+      <!-- ===== PLAY BAR (dentro del contenido) ===== -->
+      <footer class="playbar" id="playbar-java">
+        <div class="pb-main">
+          <div class="pb-version">
+            <img class="pb-grass" src="../assets/grass_icon.png" alt="" />
+            <div class="pb-vtext">
+              <select id="version-select"></select>
+              <div class="pb-vsub" id="version-sub">Latest release</div>
+            </div>
+          </div>
+          <button id="play-btn" class="play-btn">PLAY</button>
+          <div class="pb-account">
+            <span id="pb-user">Steve</span>
+          </div>
+        </div>
+        <div class="pb-progress hidden" id="pb-progress">
+          <div class="pb-dl-label"><span class="pb-dl-ic">⬇️</span> Descargando</div>
+          <div class="bar"><div class="bar-fill" id="bar-fill"></div></div>
+          <div class="pb-dl-right">
+            <span class="bar-text" id="bar-text">…</span>
+            <button id="dl-pause" class="dl-ctrl" title="Pausa">⏸ Pausa</button>
+            <button id="dl-cancel" class="dl-ctrl cancel" title="Cancelar">❌ Cancelar</button>
+          </div>
+        </div>
+      </footer>
+
+      <!-- =========================================================
+           ===============  MINECRAFT: BEDROCK EDITION  ===========
+           ========================================================= -->
+      <div class="edition-head bedrock-group" id="head-bedrock">
+        <h1 class="edition-title">MINECRAFT: <span>BEDROCK EDITION</span></h1>
+        <div class="tabs btabs">
+          <button class="btab active" data-bsub="play">Play</button>
+          <button class="btab" data-bsub="realm">Realm</button>
+          <button class="btab" data-bsub="market">Marketplace</button>
+          <button class="btab" data-bsub="creator">Creator Tools</button>
+          <button class="btab" data-bsub="faq">FAQ</button>
+          <button class="btab" data-bsub="install">Instalación</button>
+          <button class="btab" data-bsub="patch">Patch Notes</button>
+        </div>
+      </div>
+
+      <!-- ---- BEDROCK · PLAY ---- -->
+      <section class="bpanel active bedrock-group" id="bpanel-play">
+        <div class="play-art">
+          <img src="../assets/bedrock/bg_bedrock.png" alt="Minecraft Bedrock Edition" />
+          <div class="art-overlay"></div>
+        </div>
+      </section>
+
+      <!-- ---- BEDROCK · REALM ---- -->
+      <section class="bpanel bedrock-group" id="bpanel-realm">
+        <div class="bk-head"><h2>Minecraft Realms</h2><p>Tu mundo privado en la nube, siempre online para ti y tus amigos.</p></div>
+        <div class="card-grid">
+          <article class="vcard"><img src="../assets/bedrock/realm_1.jpg" alt=""/><div class="vc-body"><h3>Realms Plus</h3><p>Hasta 10 jugadores y acceso a cientos de packs del Marketplace.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/realm_2.jpg" alt=""/><div class="vc-body"><h3>Tu Realm, siempre activo</h3><p>El mundo sigue vivo aunque no estés conectado.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/realm_3.jpg" alt=""/><div class="vc-body"><h3>Invita a tus amigos</h3><p>Comparte un enlace y juega al instante en crossplay.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/realm_4.jpg" alt=""/><div class="vc-body"><h3>Copias de seguridad</h3><p>Tus progresos protegidos con backups automáticos.</p></div></article>
+        </div>
+      </section>
+      <!-- ---- BEDROCK · MARKETPLACE ---- -->
+      <section class="bpanel bedrock-group" id="bpanel-market">
+        <div class="bk-head"><h2>Marketplace</h2><p>Skins, mundos, texturas y mashups creados por la comunidad.</p></div>
+        <div class="card-grid">
+          <article class="vcard"><img src="../assets/bedrock/market_1.jpg" alt=""/><div class="vc-body"><h3>Novedades</h3><p>Lo último que llega cada semana al Marketplace.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/market_2.jpg" alt=""/><div class="vc-body"><h3>Packs destacados</h3><p>Aventuras, minijuegos y mundos listos para jugar.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/market_3.jpg" alt=""/><div class="vc-body"><h3>Marketplace Pass</h3><p>Cientos de contenidos por una suscripción mensual.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/market_4.jpg" alt=""/><div class="vc-body"><h3>Vibrant Visuals</h3><p>Mejoras gráficas y nuevos estilos para tu mundo.</p></div></article>
+        </div>
+      </section>
+
+      <!-- ---- BEDROCK · CREATOR TOOLS ---- -->
+      <section class="bpanel bedrock-group" id="bpanel-creator">
+        <div class="bk-head"><h2>Creator Tools</h2><p>Crea tus propios complementos, skins y mundos para Bedrock.</p></div>
+        <div class="card-grid">
+          <article class="vcard"><img src="../assets/bedrock/creator_1.webp" alt=""/><div class="vc-body"><h3>Editor de mundos</h3><p>Diseña escenarios y estructuras con herramientas visuales.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/creator_2.jpg" alt=""/><div class="vc-body"><h3>Add-ons y skins</h3><p>Modifica el comportamiento del juego y tu apariencia Steve/Alex.</p></div></article>
+        </div>
+      </section>
+
+      <!-- ---- BEDROCK · FAQ ---- -->
+      <section class="bpanel bedrock-group" id="bpanel-faq">
+        <div class="bk-head"><h2>Preguntas frecuentes</h2><p>Todo lo que necesitas saber sobre Minecraft Bedrock Edition.</p></div>
+        <div class="faq-list">
+          <details class="faq-item" open><summary>¿Qué es Bedrock Edition?</summary><p>Es la versión multiplataforma de Minecraft (Windows, consolas y móvil) con crossplay entre dispositivos.</p></details>
+          <details class="faq-item"><summary>¿Puedo jugar con amigos de otras plataformas?</summary><p>Sí. Bedrock permite crossplay: PC, consola y móvil pueden jugar en el mismo mundo o Realm.</p></details>
+          <details class="faq-item"><summary>¿Qué es el Marketplace?</summary><p>Una tienda dentro del juego con skins, texturas, mundos y mashups creados por la comunidad y estudios asociados.</p></details>
+          <details class="faq-item"><summary>¿Cómo instalo complementos (add-ons)?</summary><p>Descarga el archivo <b>.mcaddon</b> o <b>.mcpack</b> y ábrelo: el juego lo importa automáticamente.</p></details>
+          <details class="faq-item"><summary>¿Bedrock y Java son lo mismo?</summary><p>No. Son ediciones distintas con mundos y mods incompatibles entre sí, aunque comparten el estilo de juego.</p></details>
+        </div>
+      </section>
+      <!-- ---- BEDROCK · INSTALACIÓN ---- -->
+      <section class="bpanel bedrock-group" id="bpanel-install">
+        <div class="bk-head"><h2>Instalación</h2><p>Minecraft Bedrock Edition instalado en este equipo.</p></div>
+        <div class="inst-list">
+          <div class="inst-row current">
+            <img class="ic" src="../assets/bedrock/icon_bedrock.png" alt="" />
+            <div class="meta">
+              <div class="nm">Bedrock Edition</div>
+              <div class="vr" id="bedrock-ver">Detectando versión instalada…</div>
+            </div>
+            <button class="act act-play" id="bk-inst-play" title="Jugar">▶ Play</button>
+            <button class="act act-folder" id="bk-inst-folder" title="Abrir carpeta">📂 Abrir Carpeta</button>
+            <button class="act act-del" id="bk-inst-del" title="Eliminar">🗑️ Eliminar</button>
+          </div>
+          <div class="inst-row current" id="bedrock-preview-row">
+            <img class="ic" src="../assets/bedrock/icon_bedrock.png" alt="" />
+            <div class="meta">
+              <div class="nm">Bedrock Edition · Preview</div>
+              <div class="vr" id="bedrock-preview-ver">Opcional — versión de pruebas</div>
+            </div>
+            <button class="act act-play" id="bk-prev-play" title="Jugar Preview">▶ Play</button>
+            <button class="act act-folder" id="bk-prev-folder" title="Abrir carpeta">📂 Abrir Carpeta</button>
+          </div>
+        </div>
+        <p class="bk-note" id="bedrock-note"></p>
+      </section>
+
+      <!-- ---- BEDROCK · PATCH NOTES ---- -->
+      <section class="bpanel bedrock-group" id="bpanel-patch">
+        <div class="bk-head"><h2>Patch Notes</h2><p>Las últimas actualizaciones de Minecraft Bedrock Edition.</p></div>
+        <div class="card-grid">
+          <article class="vcard"><img src="../assets/bedrock/patch_1.jpg" alt=""/><div class="vc-body"><h3>Chaos Cubed</h3><p>El contenido más reciente de la actualización.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/patch_2.jpg" alt=""/><div class="vc-body"><h3>Nether Update</h3><p>Nuevos biomas y bloques del Nether.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/patch_3.jpg" alt=""/><div class="vc-body"><h3>Trails &amp; Tales</h3><p>Arqueología, camellos y mucho más.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/patch_4.jpg" alt=""/><div class="vc-body"><h3>Desert Update</h3><p>Novedades del desierto y sus estructuras.</p></div></article>
+          <article class="vcard"><img src="../assets/bedrock/patch_5.jpg" alt=""/><div class="vc-body"><h3>Trial Chambers</h3><p>Nuevas mazmorras y desafíos de combate.</p></div></article>
+        </div>
+      </section>
+
+      <!-- ===== BEDROCK PLAY BAR ===== -->
+      <footer class="playbar bedrock-group" id="playbar-bedrock">
+        <div class="pb-main">
+          <div class="pb-version">
+            <img class="pb-grass" src="../assets/bedrock/icon_bedrock.png" alt="" />
+            <div class="pb-vtext">
+              <select id="bk-version-select"><option>Bedrock Edition</option></select>
+              <div class="pb-vsub" id="bk-version-sub">Detectando…</div>
+            </div>
+          </div>
+          <button id="bk-play-btn" class="play-btn">PLAY</button>
+          <div class="pb-account">
+            <span id="bk-pb-user">Steve</span>
+          </div>
+        </div>
+      </footer>
+
+      <!-- =========================================================
+           ===============  MINECRAFT: DUNGEONS  ==================
+           ========================================================= -->
+      <div class="edition-head dungeons-group" id="head-dungeons">
+        <h1 class="edition-title">MINECRAFT: <span>DUNGEONS</span></h1>
+        <div class="tabs dtabs">
+          <button class="dtab active" data-dsub="play">Play</button>
+          <button class="dtab" data-dsub="dlc">DLC</button>
+          <button class="dtab" data-dsub="faq">FAQ</button>
+          <button class="dtab" data-dsub="install">Installation</button>
+          <button class="dtab" data-dsub="patch">Patch Notes</button>
+        </div>
+      </div>
+
+      <!-- ---- DUNGEONS · PLAY ---- -->
+      <section class="dpanel active dungeons-group" id="dpanel-play">
+        <div class="play-art">
+          <img src="../assets/game_dungeons.webp" alt="Minecraft Dungeons" />
+          <div class="art-overlay"></div>
+        </div>
+      </section>
+
+      <!-- ---- DUNGEONS · DLC ---- -->
+      <section class="dpanel dungeons-group" id="dpanel-dlc">
+        <div class="bk-head"><h2>Contenido descargable (DLC)</h2><p>Expande tu aventura con nuevas misiones, héroes y mazmorras.</p></div>
+        <div class="card-grid">
+          <article class="vcard ext-dungeons"><img src="../assets/game_dungeons.webp" alt=""/><div class="vc-body"><h3>Jungle Awakens</h3><p>Adentúrate en una jungla cubierta de maleza y enfréntate a nuevos jefes.</p></div></article>
+          <article class="vcard ext-dungeons"><img src="../assets/patch1.webp" alt=""/><div class="vc-body"><h3>Creeping Winter</h3><p>Hielo, nieve y los temibles Illagers en un bioma helado.</p></div></article>
+          <article class="vcard ext-dungeons"><img src="../assets/patch2.jpg" alt=""/><div class="vc-body"><h3>Howling Peaks</h3><p>Escala cumbres ventosas y domina el poder del gale.</p></div></article>
+          <article class="vcard ext-dungeons"><img src="../assets/patch3.jpg" alt=""/><div class="vc-body"><h3>Flames of the Nether</h3><p>Lleva la batalla al Nether con misiones ardientes.</p></div></article>
+          <article class="vcard ext-dungeons"><img src="../assets/bg_cave.jpg" alt=""/><div class="vc-body"><h3>Hidden Depths</h3><p>Explora las profundidades oceánicas y sus secretos.</p></div></article>
+          <article class="vcard ext-dungeons"><img src="../assets/game_legends.webp" alt=""/><div class="vc-body"><h3>Echoing Void</h3><p>Viaja al End y enfréntate a su amenaza final.</p></div></article>
+        </div>
+      </section>
+
+      <!-- ---- DUNGEONS · FAQ ---- -->
+      <section class="dpanel dungeons-group" id="dpanel-faq">
+        <div class="bk-head"><h2>Preguntas frecuentes</h2><p>Todo sobre Minecraft Dungeons.</p></div>
+        <div class="faq-list">
+          <details class="faq-item" open><summary>¿Qué es Minecraft Dungeons?</summary><p>Un juego de acción y aventura estilo dungeon-crawler ambientado en el universo de Minecraft, para 1-4 jugadores.</p></details>
+          <details class="faq-item"><summary>¿Tiene cooperativo?</summary><p>Sí, admite hasta 4 jugadores en local y en línea.</p></details>
+          <details class="faq-item"><summary>¿Necesito Minecraft para jugar?</summary><p>No. Dungeons es un juego independiente con su propia instalación.</p></details>
+          <details class="faq-item"><summary>¿Dónde compro el juego y los DLC?</summary><p>En el sitio oficial de Minecraft. Pulsa cualquier tarjeta o el botón BUY NOW para abrirlo.</p></details>
+        </div>
+      </section>
+
+      <!-- ---- DUNGEONS · INSTALLATION ---- -->
+      <section class="dpanel dungeons-group" id="dpanel-install">
+        <div class="bk-head"><h2>Instalación</h2><p>Instala o actualiza Minecraft Dungeons.</p></div>
+        <div class="inst-list">
+          <div class="inst-row current ext-dungeons">
+            <img class="ic" src="../assets/game_dungeons.webp" alt="" />
+            <div class="meta">
+              <div class="nm">Update 1.17.0.0</div>
+              <div class="vr">Última actualización de Minecraft Dungeons</div>
+            </div>
+            <button class="act act-play" title="Instalar / Actualizar">⬇ Instalar</button>
+          </div>
+        </div>
+        <p class="bk-note">La descarga e instalación de Minecraft Dungeons se realiza desde el sitio oficial de Minecraft. Al pulsar Instalar se abrirá la página oficial.</p>
+      </section>
+
+      <!-- ---- DUNGEONS · PATCH NOTES ---- -->
+      <section class="dpanel dungeons-group" id="dpanel-patch">
+        <div class="bk-head"><h2>Patch Notes</h2><p>Notas de versión de Minecraft Dungeons.</p></div>
+        <div class="card-grid">
+          <article class="vcard ext-dungeons"><img src="../assets/game_dungeons.webp" alt=""/><div class="vc-body"><h3>1.17.0.0</h3><p>Mejoras de estabilidad, equilibrio de enemigos y correcciones varias.</p></div></article>
+          <article class="vcard ext-dungeons"><img src="../assets/patch1.webp" alt=""/><div class="vc-body"><h3>1.16.0.0</h3><p>Ajustes de rendimiento y nuevas opciones de accesibilidad.</p></div></article>
+          <article class="vcard ext-dungeons"><img src="../assets/patch2.jpg" alt=""/><div class="vc-body"><h3>1.15.0.0</h3><p>Corrección de errores del modo aventura y mejoras de red.</p></div></article>
+          <article class="vcard ext-dungeons"><img src="../assets/patch3.jpg" alt=""/><div class="vc-body"><h3>1.14.0.0</h3><p>Novedades de temporada y recompensas de ladero.</p></div></article>
+        </div>
+      </section>
+
+      <!-- ===== DUNGEONS PLAY BAR ===== -->
+      <footer class="playbar dungeons-group" id="playbar-dungeons">
+        <div class="pb-main pb-store">
+          <div class="pb-version">
+            <img class="pb-grass" src="../assets/game_dungeons.webp" alt="" />
+            <div class="pb-vtext">
+              <div class="pb-vname">Minecraft Dungeons</div>
+              <div class="pb-vsub">Versión: 1.17.0.0</div>
+            </div>
+          </div>
+          <button id="dg-buy-btn" class="buy-btn gold">BUY NOW</button>
+          <button id="dg-gift-btn" class="gift-btn">Buy as Gift</button>
+        </div>
+      </footer>
+
+      <!-- =========================================================
+           ===============  MINECRAFT: LEGENDS  ===================
+           ========================================================= -->
+      <div class="edition-head legends-group" id="head-legends">
+        <h1 class="edition-title">MINECRAFT: <span>LEGENDS</span></h1>
+        <div class="tabs ltabs">
+          <button class="ltab active" data-lsub="play">Play</button>
+          <button class="ltab" data-lsub="faq">FAQ</button>
+          <button class="ltab" data-lsub="install">Installation</button>
+          <button class="ltab" data-lsub="patch">Patch Notes</button>
+        </div>
+      </div>
+
+      <!-- ---- LEGENDS · PLAY ---- -->
+      <section class="lpanel active legends-group" id="lpanel-play">
+        <div class="play-art">
+          <img src="../assets/game_legends.webp" alt="Minecraft Legends" />
+          <div class="art-overlay"></div>
+        </div>
+      </section>
+
+      <!-- ---- LEGENDS · FAQ ---- -->
+      <section class="lpanel legends-group" id="lpanel-faq">
+        <div class="bk-head"><h2>Preguntas frecuentes</h2><p>Todo sobre Minecraft Legends.</p></div>
+        <div class="faq-list">
+          <details class="faq-item" open><summary>¿Qué es Minecraft Legends?</summary><p>Un juego de acción y estrategia donde defiendes el Overworld de los piglins liderando a tus aliados.</p></details>
+          <details class="faq-item"><summary>¿Tiene multijugador?</summary><p>Sí, incluye modos cooperativo y competitivo PvP en línea.</p></details>
+          <details class="faq-item"><summary>¿Necesito Minecraft para jugar?</summary><p>No. Legends es un juego independiente con su propia instalación.</p></details>
+          <details class="faq-item"><summary>¿Dónde compro el juego?</summary><p>En el sitio oficial de Minecraft. Pulsa BUY NOW o cualquier tarjeta para abrirlo.</p></details>
+        </div>
+      </section>
+
+      <!-- ---- LEGENDS · INSTALLATION ---- -->
+      <section class="lpanel legends-group" id="lpanel-install">
+        <div class="bk-head"><h2>Instalación</h2><p>Instala o actualiza Minecraft Legends.</p></div>
+        <div class="inst-list">
+          <div class="inst-row current ext-legends">
+            <img class="ic" src="../assets/game_legends.webp" alt="" />
+            <div class="meta">
+              <div class="nm">Update 1.18.19068</div>
+              <div class="vr">Última actualización de Minecraft Legends</div>
+            </div>
+            <button class="act act-play" title="Instalar / Actualizar">⬇ Instalar</button>
+          </div>
+        </div>
+        <p class="bk-note">La descarga e instalación de Minecraft Legends se realiza desde el sitio oficial de Minecraft. Al pulsar Instalar se abrirá la página oficial.</p>
+      </section>
+
+      <!-- ---- LEGENDS · PATCH NOTES ---- -->
+      <section class="lpanel legends-group" id="lpanel-patch">
+        <div class="bk-head"><h2>Patch Notes</h2><p>Notas de versión de Minecraft Legends.</p></div>
+        <div class="card-grid">
+          <article class="vcard ext-legends"><img src="../assets/game_legends.webp" alt=""/><div class="vc-body"><h3>1.18.19068</h3><p>Mejoras de rendimiento, equilibrio PvP y correcciones de errores.</p></div></article>
+          <article class="vcard ext-legends"><img src="../assets/patch3.jpg" alt=""/><div class="vc-body"><h3>1.17</h3><p>Ajustes de la campaña y nuevas opciones de dificultad.</p></div></article>
+          <article class="vcard ext-legends"><img src="../assets/patch2.jpg" alt=""/><div class="vc-body"><h3>1.16</h3><p>Mejoras de estabilidad en multijugador y correcciones varias.</p></div></article>
+          <article class="vcard ext-legends"><img src="../assets/bg_cave.jpg" alt=""/><div class="vc-body"><h3>1.15</h3><p>Novedades de temporada y recompensas cosméticas.</p></div></article>
+        </div>
+      </section>
+
+      <!-- ===== LEGENDS PLAY BAR ===== -->
+      <footer class="playbar legends-group" id="playbar-legends">
+        <div class="pb-main pb-store">
+          <div class="pb-version">
+            <img class="pb-grass" src="../assets/game_legends.webp" alt="" />
+            <div class="pb-vtext">
+              <div class="pb-vname">Minecraft Legends</div>
+              <div class="pb-vsub">Versión: 1.18.19068</div>
+            </div>
+          </div>
+          <button id="lg-buy-btn" class="buy-btn blue">BUY NOW</button>
+          <button id="lg-gift-btn" class="gift-btn">Buy as Gift</button>
+        </div>
+      </footer>
+    </main>
+  </div>
+
+  <!-- Modal: New installation -->
+  <div class="modal-bg hidden" id="modal-inst">
+    <div class="modal">
+      <div class="modal-head"><h3>Create new installation</h3><button id="modal-x" class="modal-x">&times;</button></div>
+      <div class="modal-body">
+        <label>NAME</label>
+        <input id="ni-name" type="text" value="unnamed installation" />
+        <label>VERSION</label>
+        <select id="ni-version"></select>
+        <label>LOADER / MOD</label>
+        <div class="loader-row" id="loader-row">
+          <button class="loader-opt active" data-loader="vanilla"><span>Vanilla</span></button>
+          <button class="loader-opt" data-loader="optifine"><span>OptiFine</span></button>
+          <button class="loader-opt" data-loader="fabric"><span>Fabric</span></button>
+          <button class="loader-opt" data-loader="forge"><span>Forge</span></button>
+          <button class="loader-opt" data-loader="neoforge"><span>NeoForge</span></button>
+          <button class="loader-opt" data-loader="quilt"><span>Quilt</span></button>
+        </div>
+        <label>ICONO DEL BLOQUE</label>
+        <div class="block-row" id="block-row">
+          <button class="block-opt active" data-block="blk_grass"><img src="../assets/blk_grass.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_dirt"><img src="../assets/blk_dirt.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_wood"><img src="../assets/blk_wood.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_diamond"><img src="../assets/blk_diamond.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_gold"><img src="../assets/blk_gold.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_ore"><img src="../assets/blk_ore.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_tnt"><img src="../assets/blk_tnt.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_netherite"><img src="../assets/blk_netherite.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_snow"><img src="../assets/blk_snow.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_log"><img src="../assets/blk_log.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_iron"><img src="../assets/blk_iron.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_copper"><img src="../assets/blk_copper.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_amethyst"><img src="../assets/blk_amethyst.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_sculk"><img src="../assets/blk_sculk.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_bedrock"><img src="../assets/blk_bedrock.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_pumpkin"><img src="../assets/blk_pumpkin.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_cherry"><img src="../assets/blk_cherry.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_apple"><img src="../assets/blk_apple.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_gem"><img src="../assets/blk_gem.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_pickaxe"><img src="../assets/blk_pickaxe.png" alt=""/></button>
+          <button class="block-opt" data-block="blk_creeper"><img src="../assets/blk_creeper.png" alt=""/></button>
+        </div>
+        <label class="chk"><input type="checkbox" id="ni-snap" /> Mostrar snapshots</label>
+      </div>
+      <div class="modal-foot">
+        <button id="ni-cancel" class="btn-sec">Cancel</button>
+        <button id="ni-create" class="btn-create">Create</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="skin-render.js"></script>
+  <script src="renderer.js"></script>
+</body>
+</html>

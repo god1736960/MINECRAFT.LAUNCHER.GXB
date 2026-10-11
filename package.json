@@ -1,0 +1,49 @@
+{
+  "name": "launcher-minecraft",
+  "version": "1.0.0",
+  "description": "LAUNCHER MINECRAFT - replica oficial (Java Edition) con motor de arranque",
+  "main": "main.js",
+  "author": "OreateAI",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "dist": "electron-builder --win --x64",
+    "dist:win": "electron-builder --win --x64"
+  },
+  "devDependencies": {
+    "electron": "31.3.0",
+    "electron-builder": "24.13.3"
+  },
+  "build": {
+    "appId": "com.oreateai.launcherminecraft",
+    "productName": "LAUNCHER MINECRAFT",
+    "icon": "build/icon.ico",
+    "files": [
+      "main.js",
+      "preload.js",
+      "src/**/*",
+      "assets/**/*",
+      "build/icon.ico"
+    ],
+    "directories": {
+      "output": "dist"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": ["x64"]
+        }
+      ],
+      "icon": "build/icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "LAUNCHER MINECRAFT"
+    }
+  }
+}
